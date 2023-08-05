@@ -86,7 +86,7 @@ def prepare_body_headers_with_data(request):
         ]
     }
 
-    chatgpt_url = f"https://{AZURE_OPENAI_RESOURCE}.openai.azure.com/openai/deployments/{AZURE_OPENAI_MODEL}"
+    chatgpt_url = f"{AZURE_OPENAI_RESOURCE}deployments/{AZURE_OPENAI_MODEL}"
     if is_chat_model():
         chatgpt_url += "/chat/completions?api-version=2023-03-15-preview"
     else:
@@ -146,7 +146,7 @@ def stream_with_data(body, headers, endpoint):
 
 def conversation_with_data(request):
     body, headers = prepare_body_headers_with_data(request)
-    endpoint = f"https://{AZURE_OPENAI_RESOURCE}.openai.azure.com/openai/deployments/{AZURE_OPENAI_MODEL}/extensions/chat/completions?api-version={AZURE_OPENAI_PREVIEW_API_VERSION}"
+    endpoint = f"{AZURE_OPENAI_RESOURCE}deployments/{AZURE_OPENAI_MODEL}/extensions/chat/completions?api-version={AZURE_OPENAI_PREVIEW_API_VERSION}"
     
     if not SHOULD_STREAM:
         r = requests.post(endpoint, headers=headers, json=body)
@@ -184,7 +184,7 @@ def stream_without_data(response):
 
 def conversation_without_data(request):
     openai.api_type = "azure"
-    openai.api_base = f"https://{AZURE_OPENAI_RESOURCE}.openai.azure.com/"
+    openai.api_base = f"{AZURE_OPENAI_RESOURCE}"
     openai.api_version = "2023-03-15-preview"
     openai.api_key = AZURE_OPENAI_KEY
 
