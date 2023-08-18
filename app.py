@@ -97,7 +97,6 @@ def prepare_body_headers_with_data(request):
         'api-key': AZURE_OPENAI_KEY,
         'chatgpt_url': chatgpt_url,
         'chatgpt_key': AZURE_OPENAI_KEY,
-        'Authorization': 'Bearer ' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJhcGk6Ly80ODA5ZDNiMy02ZmM0LTQ4NmYtYmYyMi1kZDBmZTA3YWRlYTgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9iZDhjMDZhNS1hZmIwLTRjMjctOWI0NS03NzM1MzQzN2JjZGQvIiwiaWF0IjoxNjkxOTMwMjMwLCJuYmYiOjE2OTE5MzAyMzAsImV4cCI6MTY5MTkzNTYxMywiYWNyIjoiMSIsImFpbyI6IkFVUUF1LzhVQUFBQWFuTkVQRWVINUJRd0p0ZitNY0NJekZyT3picWdDV1o3TmpuZnZUQ3RpNzVLaUhuUXRxSXZjdCtDNngxRTJVUHc5eGRMcGRHR3FLNWRCVkQzNzZIaDNnPT0iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiMTUxOGVhNWYtMWJlMy00N2I1LTkzZmMtMjYzMDQ5Y2RlOTI2IiwiYXBwaWRhY3IiOiIxIiwiZW1haWwiOiJkYXZpZEBjaW50cm9uLmlvIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMzhjZjQyMzAtZWMyMS00YTUwLWEyYjUtMGUzNmY0ZTdjN2Y2LyIsImlwYWRkciI6Ijk4LjIxMi4xODEuMTc2IiwibmFtZSI6IkRhdmlkIENpbnRyb24iLCJvaWQiOiI2MTVkYzhkZi04MmVlLTRmZDUtYTQ5NS05NTdmNjA5NGQxMDciLCJyaCI6IjAuQVZrQXBRYU12YkN2SjB5YlJYYzFORGU4M2JQVENVakViMjlJdnlMZEQtQjYzcWlkQURBLiIsInJvbGVzIjpbInNwbiJdLCJzY3AiOiJvcGVuYWkuYmFja2VuZC5yZWFkIiwic3ViIjoiZVZlbWF6eE9QdXZ6ZWxrOEgyU1F4dDdEVmxZQ3AzS1ZObkNoT3RjdzNKUSIsInRpZCI6ImJkOGMwNmE1LWFmYjAtNGMyNy05YjQ1LTc3MzUzNDM3YmNkZCIsInVuaXF1ZV9uYW1lIjoiZGF2aWRAY2ludHJvbi5pbyIsInV0aSI6Im92cWVTS3hTSEU2di0yN1g1MXFTQUEiLCJ2ZXIiOiIxLjAifQ.ngcLxuHqFgVJOey8bElCFGbyB9zJvAGaH69hDZdZBrzAHPp4YRjos3M-PFaI9VHdVc-Bqlqbtx5lanG-LmfATtI8cZOTzdKf36JThai3tdZfWjBa6BI-V-XNiJeUHGpdROsupznJW_J-LBczCIqE1jeiUJohCgkgNcZpXs7oR_qldxcuqzM0QjcNzTo3vsETiX2AlllvMiElAwwbBut2jBKHmDcNUtJntWQDzg4MjDhom3bYHJ4-TqXi_vcmfut2T2dhDBEnE_lwbVkFAFKSNUPtcPO5alw3pHsVKLPVvJ5ELosqzm-bQZARx6Telpq9X8-BJ5q3DpFo544jqXRuXw',
         "x-ms-useragent": "GitHubSampleWebApp/PublicAPI/1.0.0"
     }
 
@@ -188,10 +187,9 @@ def conversation_without_data(request):
     openai.api_base = f"{AZURE_OPENAI_RESOURCE}"
     openai.api_version = "2023-03-15-preview"
     openai.api_key = AZURE_OPENAI_KEY
-    openai.api_token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJhcGk6Ly80ODA5ZDNiMy02ZmM0LTQ4NmYtYmYyMi1kZDBmZTA3YWRlYTgiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC9iZDhjMDZhNS1hZmIwLTRjMjctOWI0NS03NzM1MzQzN2JjZGQvIiwiaWF0IjoxNjkxOTM5NzQyLCJuYmYiOjE2OTE5Mzk3NDIsImV4cCI6MTY5MTk0NDk3NiwiYWNyIjoiMSIsImFpbyI6IkFVUUF1LzhVQUFBQU02THJ4SHhSZE9jZS9UK2IrM2kwbGU1cVBxSEg1ZzI4bHVrYlhDVmpTUXN2eDRDOWVJbTM0UWw4RUsvTVBjaE9kb3R0dDNLRGNJY3luY1ZpRGVwSzBRPT0iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiMTUxOGVhNWYtMWJlMy00N2I1LTkzZmMtMjYzMDQ5Y2RlOTI2IiwiYXBwaWRhY3IiOiIxIiwiZW1haWwiOiJkYXZpZEBjaW50cm9uLmlvIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMzhjZjQyMzAtZWMyMS00YTUwLWEyYjUtMGUzNmY0ZTdjN2Y2LyIsImlwYWRkciI6Ijk4LjIxMi4xODEuMTc2IiwibmFtZSI6IkRhdmlkIENpbnRyb24iLCJvaWQiOiI2MTVkYzhkZi04MmVlLTRmZDUtYTQ5NS05NTdmNjA5NGQxMDciLCJyaCI6IjAuQVZrQXBRYU12YkN2SjB5YlJYYzFORGU4M2JQVENVakViMjlJdnlMZEQtQjYzcWlkQURBLiIsInJvbGVzIjpbInNwbiJdLCJzY3AiOiJvcGVuYWkuYmFja2VuZC5yZWFkIiwic3ViIjoiZVZlbWF6eE9QdXZ6ZWxrOEgyU1F4dDdEVmxZQ3AzS1ZObkNoT3RjdzNKUSIsInRpZCI6ImJkOGMwNmE1LWFmYjAtNGMyNy05YjQ1LTc3MzUzNDM3YmNkZCIsInVuaXF1ZV9uYW1lIjoiZGF2aWRAY2ludHJvbi5pbyIsInV0aSI6IjBzRWVnc2lCU1VPNkhHZWRnNUtmQUEiLCJ2ZXIiOiIxLjAifQ.LBNt1M2JPj87-rOcRtN6H60kmqESFeS50-LI7nQMBqU-40GnWz_UZqT5QFzdoE-his-Z3Ue56Ipnib0FrnHyhdw1iM4qDEoqBJku3AvtkRKe5LZ9afWyZfvDB-8gwQh1eINnqbh43004y3Cl0qbkwct7nhb1dszWAPQZ5ZaLAEEmkW2G8h-h_cYHXzPYnx_Y2lW0RCK6IZgsSuHk4jfGo9QACwIbaGgGJtXsOJz_rV0lSYa063GkZ8sBx0rVyLxqYvc-8ApCleQf6JY8-1h-ImdjxTwf8yQYa5iNhxk4HU3n-TstxMbshgUUc1qrDxKjLQRTgBqUNlE0oza-_obnNQ'
     
     headers = { 
-        'Authorization': request.headers.get('Authorization') ##openai.api_token
+        'Authorization': request.headers.get('Authorization')
     }
     request_messages = request.json["messages"]
     messages = [
@@ -239,14 +237,6 @@ def conversation_without_data(request):
         else:
             return Response(None, mimetype='text/event-stream')
         
-# def refresh_tokens():
-#     refresh_url = "https://cintron-openai.azurewebsites.net/.auth/refresh"
-#     response = requests.post(refresh_url)
-#     if response.status_code == 200:
-#         print("Token refresh completed successfully.")
-#     else:
-#         print("Token refresh failed. See application logs for details.")
-
 @app.route("/conversation", methods=["GET", "POST"])
 def conversation():
     try:
