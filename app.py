@@ -189,7 +189,7 @@ def conversation_without_data(request):
     openai.api_key = AZURE_OPENAI_KEY
     
     headers = { 
-        'Authorization': request.headers.get('Authorization')
+        'Authorization': request.headers.get('Authorization') 
     }
     request_messages = request.json["messages"]
     messages = [

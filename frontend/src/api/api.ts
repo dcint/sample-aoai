@@ -4,7 +4,10 @@ import { UserInfo, ConversationRequest } from "./models";
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
 
     const accessToken = await getUserToken();
+    const principal = await getUserInfo_with_principal();
+    console.log(`Principal: ${principal}`);
 
+    // const userId = await getUserId();
     const response = await fetch("/conversation", {
         method: "POST",
         headers: {
@@ -12,6 +15,7 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
             "Cache-Control": "max-age=3600",
             "Authorization": `Bearer ${accessToken}`
         },
+
         body: JSON.stringify({
             messages: options.messages
         }),
@@ -30,6 +34,13 @@ export async function getUserInfo(): Promise<UserInfo[]> {
 
     const payload = await response.json();
     return payload;
+}
+
+export async function getUserInfo_with_principal() {
+    const response = await fetch('/.auth/me');
+    const payload = await response.json();
+    const { clientPrincipal } = payload;
+    return clientPrincipal;
 }
 
 export async function getUserToken(): Promise<string> {
@@ -87,6 +98,20 @@ export async function getUserToken(): Promise<string> {
     }
     return userInfo.access_token || "";
 }
+
+// async function getUserId() {
+//     const response = await fetch('/.auth/me');
+//     if (!response.ok) {
+//         throw new Error(`Failed to get user info: ${response.status} ${response.statusText}`);
+//     }
+//     const payload = await response.json();
+//     const userInfo = payload[0];
+//     if (!userInfo) {
+//         throw new Error('No user info found');
+//     }
+//     const userId = atob(userInfo.user_id);
+//     return userId;
+// }
 //             .catch(error => {
 //                 console.error('Refresh failed:', error);
 
