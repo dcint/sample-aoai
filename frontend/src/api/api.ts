@@ -75,19 +75,24 @@ export async function getUserToken(): Promise<string> {
     const timeDifference = expirationTime.getTime() - currentTime.getTime();
     console.log(`Time difference: ${timeDifference}`);
     if (timeDifference <= 0 || timeDifference <= 5 * 60 * 1000) {
-        fetch(refreshEndpoint)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Refresh request failed');
-                }
-                console.log('Refresh successful:', response.status);
-            })
-
-            .catch(error => {
-                console.error('Refresh failed:', error);
-
-            });
-
+        try {
+            const refreshResponse = await fetch(refreshEndpoint);
+            if (!refreshResponse.ok) {
+                throw new Error('Refresh request failed');
+            }
+            console.log('Refresh successful:', refreshResponse.status);
+            const refreshedPayload = await fetch('/.auth/me').then(res => res.json());
+            const refreshedUserInfo = refreshedPayload[0];
+            const refreshedAccessToken = refreshedUserInfo.access_token;
+            if (!refreshedAccessToken) {
+                console.log("No refreshed access token found. Access to chat will be blocked.")
+                return "";
+            }
+            return refreshedAccessToken;
+        } catch (error) {
+            console.error('Refresh failed:', error);
+            return "";
+        }
     } else {
         const accessToken = userInfo.access_token;
         if (!accessToken) {
@@ -96,8 +101,31 @@ export async function getUserToken(): Promise<string> {
         }
         return accessToken;
     }
-    return userInfo.access_token || "";
 }
+//     if (timeDifference <= 0 || timeDifference <= 5 * 60 * 1000) {
+//         fetch(refreshEndpoint)
+//             .then(response => {
+//                 if (!response.ok) {
+//                     throw new Error('Refresh request failed');
+//                 }
+//                 console.log('Refresh successful:', response.status);
+//             })
+
+//             .catch(error => {
+//                 console.error('Refresh failed:', error);
+
+//             });
+
+//     } else {
+//         const accessToken = userInfo.access_token;
+//         if (!accessToken) {
+//             console.log("No access token found. Access to chat will be blocked.")
+//             return "";
+//         }
+//         return accessToken;
+//     }
+//     return userInfo.access_token || "";
+// }
 
 // async function getUserId() {
 //     const response = await fetch('/.auth/me');
