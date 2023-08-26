@@ -4,16 +4,19 @@ import { UserInfo, ConversationRequest } from "./models";
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
 
     const accessToken = await getUserToken();
-    const principal = await getUserInfo_with_principal();
-    console.log(`Principal: ${principal}`);
+    // const oaiToken = await getOaiToken();
+    // console.log(`Access Token: ${oaiToken}`);
 
-    // const userId = await getUserId();
+    const UserID = await extractUPN();
+    console.log(`User ID: ${UserID}`);
+
     const response = await fetch("/conversation", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Cache-Control": "max-age=3600",
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${accessToken}`,
+            "User-Id": `${UserID}`
         },
 
         body: JSON.stringify({
@@ -36,11 +39,13 @@ export async function getUserInfo(): Promise<UserInfo[]> {
     return payload;
 }
 
-export async function getUserInfo_with_principal() {
-    const response = await fetch('/.auth/me');
-    const payload = await response.json();
-    const { clientPrincipal } = payload;
-    return clientPrincipal;
+import jwt_decode from 'jwt-decode';
+
+export async function extractUPN() {
+    const accessToken = await getUserToken();
+    const decodedToken = jwt_decode(accessToken) as { unique_name: string };
+    const upn = decodedToken.unique_name;
+    return upn;
 }
 
 export async function getUserToken(): Promise<string> {
@@ -102,63 +107,16 @@ export async function getUserToken(): Promise<string> {
         return accessToken;
     }
 }
-//     if (timeDifference <= 0 || timeDifference <= 5 * 60 * 1000) {
-//         fetch(refreshEndpoint)
-//             .then(response => {
-//                 if (!response.ok) {
-//                     throw new Error('Refresh request failed');
-//                 }
-//                 console.log('Refresh successful:', response.status);
-//             })
 
-//             .catch(error => {
-//                 console.error('Refresh failed:', error);
-
-//             });
-
-//     } else {
-//         const accessToken = userInfo.access_token;
-//         if (!accessToken) {
-//             console.log("No access token found. Access to chat will be blocked.")
-//             return "";
-//         }
-//         return accessToken;
-//     }
-//     return userInfo.access_token || "";
-// }
-
-// async function getUserId() {
-//     const response = await fetch('/.auth/me');
+// export async function getOaiToken() {
+//     const response = await fetch('https://cognitiveservices.azure.com/.default');
 //     if (!response.ok) {
-//         throw new Error(`Failed to get user info: ${response.status} ${response.statusText}`);
-//     }
-//     const payload = await response.json();
-//     const userInfo = payload[0];
-//     if (!userInfo) {
-//         throw new Error('No user info found');
-//     }
-//     const userId = atob(userInfo.user_id);
-//     return userId;
-// }
-//             .catch(error => {
-//                 console.error('Refresh failed:', error);
-
-//             });
-
-//     } else {
-//         const accessToken = userInfo.access_token;
-//         if (!accessToken) {
-//             console.log("No access token found. Access to chat will be blocked.")
-//             return "";
-//         }
-//         return accessToken;
-//     }
-//     return "";
-// }
-//     const accessToken = userInfo.access_token;
-//     if (!accessToken) {
-//         console.log("No access token found. Access to chat will be blocked.")
+//         console.log("No AAD AI provider found. Access to chat will be blocked.")
 //         return "";
 //     }
-//     return accessToken;
+//     const payload = await response.json();
+//     const Token = payload[0];
+//     console.log(`Token: ${Token}`);
+//     return Token;
 // }
+
