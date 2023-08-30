@@ -16,9 +16,14 @@ app = Flask(__name__)
 def static_file(path):
     return app.send_static_file(path)
 
+
+def get_access_token():
+    credential = ManagedIdentityCredential()
+    access_token = credential.get_token("https://cognitiveservices.azure.com/.default")
+    return access_token.token
 # Managed Identity Settings
-credential = ManagedIdentityCredential()
-access_token = credential.get_token("https://cognitiveservices.azure.com/.default")
+# credential = ManagedIdentityCredential()
+# access_token = credential.get_token("https://cognitiveservices.azure.com/.default")
 
 # ACS Integration Settings
 AZURE_SEARCH_SERVICE = os.environ.get("AZURE_SEARCH_SERVICE")
@@ -36,7 +41,7 @@ AZURE_SEARCH_URL_COLUMN = os.environ.get("AZURE_SEARCH_URL_COLUMN")
 # AOAI Integration Settings
 AZURE_OPENAI_RESOURCE = os.environ.get("AZURE_OPENAI_RESOURCE")
 AZURE_OPENAI_MODEL = os.environ.get("AZURE_OPENAI_MODEL")
-AZURE_OPENAI_KEY = access_token.token
+AZURE_OPENAI_KEY = ""
 AZURE_OPENAI_TEMPERATURE = os.environ.get("AZURE_OPENAI_TEMPERATURE", 0)
 AZURE_OPENAI_TOP_P = os.environ.get("AZURE_OPENAI_TOP_P", 1.0)
 AZURE_OPENAI_MAX_TOKENS = os.environ.get("AZURE_OPENAI_MAX_TOKENS", 1000)
@@ -47,6 +52,7 @@ AZURE_OPENAI_STREAM = os.environ.get("AZURE_OPENAI_STREAM", "true")
 AZURE_OPENAI_MODEL_NAME = os.environ.get("AZURE_OPENAI_MODEL_NAME", "gpt-35-turbo") # Name of the model, e.g. 'gpt-35-turbo' or 'gpt-4'
 
 SHOULD_STREAM = True if AZURE_OPENAI_STREAM.lower() == "true" else False
+
 
 def is_chat_model():
     if 'gpt-4' in AZURE_OPENAI_MODEL_NAME.lower() or AZURE_OPENAI_MODEL_NAME.lower() in ['gpt-35-turbo-4k', 'gpt-35-turbo-16k']:
@@ -59,6 +65,7 @@ def should_use_data():
     return False
 
 def prepare_body_headers_with_data(request):
+    msi_access_token = get_access_token()   
     request_messages = request.json["messages"]
 
     body = {
@@ -99,9 +106,9 @@ def prepare_body_headers_with_data(request):
 
     headers = {
         'Content-Type': 'application/json',
-        'api-key': AZURE_OPENAI_KEY,
+        'api-key': msi_access_token,
         'chatgpt_url': chatgpt_url,
-        'chatgpt_key': AZURE_OPENAI_KEY,
+        'chatgpt_key': msi_access_token,
         "x-ms-useragent": "GitHubSampleWebApp/PublicAPI/1.0.0"
     }
 
@@ -186,25 +193,22 @@ def stream_without_data(response):
         }
         yield json.dumps(response_obj).replace("\n", "\\n") + "\n"
 
-# credential = ManagedIdentityCredential()
-# access_token = credential.get_token("https://cognitiveservices.azure.com/.default")
+
 
 def conversation_without_data(request):
-
-    # credential = ManagedIdentityCredential()
-    # access_token = credential.get_token("https://cognitiveservices.azure.com/.default")
-    # print(access_token.token)   
+    
+    msi_access_token = get_access_token()
 
 
     openai.api_type = 'azure_ad'
     openai.api_base = f"{AZURE_OPENAI_RESOURCE}"
     openai.api_version = "2023-03-15-preview"
-    openai.api_key = AZURE_OPENAI_KEY 
+    openai.api_key = msi_access_token  
     
     headers = { 
         'Authorization': request.headers.get('Authorization'),
         "User-Id": request.headers.get('User-Id'),
-        "api-key": AZURE_OPENAI_KEY 
+        "api-key": msi_access_token 
     }
     request_messages = request.json["messages"]
     messages = [
